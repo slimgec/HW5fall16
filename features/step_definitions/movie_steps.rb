@@ -46,12 +46,16 @@ Given /^I am on the RottenPotatoes home page$/ do
 # Add a declarative step here for populating the DB with movies.
 
 Given /the following movies have been added to RottenPotatoes:/ do |movies_table|
-  pending  # Remove this statement when you finish implementing the test step
+  #pending  # Remove this statement when you finish implementing the test step
   movies_table.hashes.each do |movie|
     # Each returned movie will be a hash representing one row of the movies_table
     # The keys will be the table headers and the values will be the row contents.
     # Entries can be directly to the database with ActiveRecord methods
     # Add the necessary Active Record call(s) to populate the database.
+    # Check if movie is in the db, if not then add movie
+    if ( ! Movie.find_by_title(movie[:title]))
+        Movie.create!(movie)
+    end
   end
 end
 
@@ -59,11 +63,30 @@ When /^I have opted to see movies rated: "(.*?)"$/ do |arg1|
   # HINT: use String#split to split up the rating_list, then
   # iterate over the ratings and check/uncheck the ratings
   # using the appropriate Capybara command(s)
-  pending  #remove this statement after implementing the test step
+  # pending  #remove this statement after implementing the test step
+  # First, uncheck all ratings
+  all_ratings = %w(G PG PG-13 NC-17 R)
+  all_ratings.each do |rating|
+    uncheck "ratings\[#{rating}\]"
+  end
+  # Next, check the desired ratings
+  arg1.split(', ').each do |rating|
+    check "ratings\[#{rating}\]"
+  end
 end
 
 Then /^I should see only movies rated: "(.*?)"$/ do |arg1|
-  pending  #remove this statement after implementing the test step
+  #pending  #remove this statement after implementing the test step
+  # Check if desired check boxes are checked
+  all_ratings = %w(G PG PG-13 NC-17 R)
+  arg1.split(', ').each do |rating|
+    page.has_checked_field? "ratings\[#{rating}\]"
+    all_ratings.delete(rating) # delete specified ratings from all ratings
+  end
+  # Check if all other check boxes are not checked
+  all_ratings.each do |rating|
+    page.has_unchecked_field? "ratings\[#{rating}\]"
+  end
 end
 
 Then /^I should see all of the movies$/ do

@@ -23,7 +23,10 @@ Background: movies have been added to database
 
 Scenario: sort movies alphabetically
   # your scenario here
+  When I have opted to see movies sorted alphabetically
+  Then I should see all movies sorted alphabetically by title
 
 Scenario: sort movies in increasing order of release date
   # your scenario here
-
+  When I have opted to see movies sorted in increasing order of release date
+  Then I should see all movies sorted in increasing order of release date
