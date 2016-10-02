@@ -46,7 +46,6 @@ Given /^I am on the RottenPotatoes home page$/ do
 # Add a declarative step here for populating the DB with movies.
 
 Given /the following movies have been added to RottenPotatoes:/ do |movies_table|
-  #pending  # Remove this statement when you finish implementing the test step
   movies_table.hashes.each do |movie|
     # Each returned movie will be a hash representing one row of the movies_table
     # The keys will be the table headers and the values will be the row contents.
@@ -63,7 +62,6 @@ When /^I have opted to see movies rated: "(.*?)"$/ do |arg1|
   # HINT: use String#split to split up the rating_list, then
   # iterate over the ratings and check/uncheck the ratings
   # using the appropriate Capybara command(s)
-  # pending  #remove this statement after implementing the test step
   # First, uncheck all ratings
   all_ratings = %w(G PG PG-13 NC-17 R)
   all_ratings.each do |rating|
@@ -76,7 +74,6 @@ When /^I have opted to see movies rated: "(.*?)"$/ do |arg1|
 end
 
 Then /^I should see only movies rated: "(.*?)"$/ do |arg1|
-  #pending  #remove this statement after implementing the test step
   # Check if desired check boxes are checked
   all_ratings = %w(G PG PG-13 NC-17 R)
   arg1.split(', ').each do |rating|
@@ -90,7 +87,7 @@ Then /^I should see only movies rated: "(.*?)"$/ do |arg1|
 end
 
 Then /^I should see all of the movies$/ do
-  pending  #remove this statement after implementing the test step
+    all('tr').count == Movie.count # True if number of table rows equals number of rows in model
 end
 
 
