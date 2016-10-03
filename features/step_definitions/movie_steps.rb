@@ -112,13 +112,13 @@ end
 Then(/^I should see all movies sorted alphabetically by title$/) do
   # Check if movie is in page and add to list if so
   num = 0
-  movie_list = [] # create empty movie list
+  list = [] # create empty movie list
   within_table('movies') do
     within(:xpath, 'tbody') do
       all("tr").each do |tr|
         # both of the following statements are equivalent
-        #movie_list << tr.first('td').text # add to movie title to movie_list array
-        movie_list << tr.find('td[1]').text # add to movie title to movie_list array
+        #list << tr.first('td').text # add to movie title to movie_list array
+        list << tr.find('td[1]').text # add to movie title to movie_list array
         num = all('tr').count
       end
     end
@@ -127,7 +127,7 @@ Then(/^I should see all movies sorted alphabetically by title$/) do
 #   puts all('tr').count
 #   puts Movie.count
   result = false
-  if (movie_list == movie_list.sort && num == Movie.count)
+  if (list == list.sort && num == Movie.count)
     result = true
   end
   expect(result).to be_truthy
@@ -140,18 +140,18 @@ end
 Then(/^I should see all movies sorted in increasing order of release date$/) do
     # Check if date is in page and add to list if so
   num = 0
-  date_list = [] # create empty date list
+  list = [] # create empty date list
   within_table('movies') do
     within(:xpath, 'tbody') do
       all("tr").each do |tr|
-        date_list << tr.find('td[3]').text # add to movie date to date_list array
+        list << tr.find('td[3]').text # add to movie date to date_list array
         num = all('tr').count
       end
     end
   end
   
   result = false
-  if (date_list == date_list.sort && num == Movie.count)
+  if (list == list.sort && num == Movie.count)
     result = true
   end
   expect(result).to be_truthy
