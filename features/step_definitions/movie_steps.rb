@@ -87,8 +87,73 @@ Then /^I should see only movies rated: "(.*?)"$/ do |arg1|
 end
 
 Then /^I should see all of the movies$/ do
-    all('tr').count == Movie.count # True if number of table rows equals number of rows in model
+    # Count number of rows in table body
+    num = 0;
+    within_table('movies') do
+      within(:xpath, 'tbody') do
+        num = all('tr').count
+      end
+    end
+    result = false
+    if (num == Movie.count) # True if number of table rows equals number of rows in model
+      result = true
+    end
+    expect(result).to be_truthy
 end
 
 
+
+# Steps added to sort movie list
+
+When(/^I have opted to see movies sorted alphabetically$/) do
+  click_on 'Movie Title'
+end
+
+Then(/^I should see all movies sorted alphabetically by title$/) do
+  # Check if movie is in page and add to list if so
+  num = 0
+  movie_list = [] # create empty movie list
+  within_table('movies') do
+    within(:xpath, 'tbody') do
+      all("tr").each do |tr|
+        # both of the following statements are equivalent
+        #movie_list << tr.first('td').text # add to movie title to movie_list array
+        movie_list << tr.find('td[1]').text # add to movie title to movie_list array
+        num = all('tr').count
+      end
+    end
+  end
+#   puts movie_list
+#   puts all('tr').count
+#   puts Movie.count
+  result = false
+  if (movie_list == movie_list.sort && num == Movie.count)
+    result = true
+  end
+  expect(result).to be_truthy
+end
+
+When(/^I have opted to see movies sorted in increasing order of release date$/) do
+  click_on 'Release Date'
+end
+
+Then(/^I should see all movies sorted in increasing order of release date$/) do
+    # Check if date is in page and add to list if so
+  num = 0
+  date_list = [] # create empty date list
+  within_table('movies') do
+    within(:xpath, 'tbody') do
+      all("tr").each do |tr|
+        date_list << tr.find('td[3]').text # add to movie date to date_list array
+        num = all('tr').count
+      end
+    end
+  end
+  
+  result = false
+  if (date_list == date_list.sort && num == Movie.count)
+    result = true
+  end
+  expect(result).to be_truthy
+end
 
