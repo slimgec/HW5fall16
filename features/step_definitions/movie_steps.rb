@@ -110,27 +110,7 @@ When(/^I have opted to see movies sorted alphabetically$/) do
 end
 
 Then(/^I should see all movies sorted alphabetically by title$/) do
-  # Check if movie is in page and add to list if so
-  num = 0
-  list = [] # create empty movie list
-  within_table('movies') do
-    within(:xpath, 'tbody') do
-      all("tr").each do |tr|
-        # both of the following statements are equivalent
-        #list << tr.first('td').text # add to movie title to movie_list array
-        list << tr.find('td[1]').text # add to movie title to movie_list array
-        num = all('tr').count
-      end
-    end
-  end
-#   puts movie_list
-#   puts all('tr').count
-#   puts Movie.count
-  result = false
-  if (list == list.sort && num == Movie.count)
-    result = true
-  end
-  expect(result).to be_truthy
+  sort_by_column(1)
 end
 
 When(/^I have opted to see movies sorted in increasing order of release date$/) do
@@ -138,22 +118,29 @@ When(/^I have opted to see movies sorted in increasing order of release date$/) 
 end
 
 Then(/^I should see all movies sorted in increasing order of release date$/) do
-    # Check if date is in page and add to list if so
-  num = 0
+  sort_by_column(3)
+end
+
+def sort_by_column(column)
+  num = 0   # number of rows in table body
   list = [] # create empty date list
   within_table('movies') do
     within(:xpath, 'tbody') do
+      # count number of table rows in table body
+      num = all('tr').count
+      
+      # add entry from desired column to list
       all("tr").each do |tr|
-        list << tr.find('td[3]').text # add to movie date to date_list array
-        num = all('tr').count
+        list << tr.find("td[#{column}]").text
       end
     end
   end
   
+  # Check if column list is sorted and if the number of table
+  # entries matches the number of elements in the Movie database
   result = false
   if (list == list.sort && num == Movie.count)
     result = true
   end
   expect(result).to be_truthy
 end
-
